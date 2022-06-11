@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Topic, Entry
 from .forms import TopicForm, EntryForm
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 
 
 def index(request):
@@ -12,7 +13,8 @@ def index(request):
 @login_required
 def topics(request):
     """Выводит список тем."""
-    name_1 = Topic.objects.order_by('date_added')
+    # name_1 = Topic.objects.order_by('date_added')
+    name_1 = Topic.objects.filter(owner=request.user).order_by('date_added')
     context = {'topics': name_1}
     return render(request, 'learning_logs/topics.html', context)
 
@@ -21,6 +23,11 @@ def topics(request):
 def topic(request, topic_id):
     """Выводит одну тему и все ее записи."""
     name_2 = Topic.objects.get(id=topic_id)
+    topic = name_2.owner
+    # Проверка того, что тема принадлежит текущему пользователю.
+    check_topic_owner(topic, request)
+    # if topic.owner != request.user:
+    #     raise Http404
     entries = name_2.entry_set.order_by('-date_added')
     context = {'topic': name_2, 'entries': entries}
     return render(request, 'learning_logs/topic.html', context)
@@ -36,7 +43,10 @@ def new_topic(request):
         # Отправлены данные POST; обработать данные.
         form = TopicForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            new_topic = form.save(commit=False)
+            new_topic.owner = request.user
+            new_topic.save()
+            # form.save()
             return redirect('learning_logs:topics')
 
     # Вывести пустую или недействительную форму.
@@ -55,9 +65,12 @@ def new_entry(request, topic_id):
         # Отправлены данные POST; обработать данные.
         form = EntryForm(data=request.POST)
         if form.is_valid():
-            new_entry = form.save(commit=False)
-            new_entry.topic = topic
-            new_entry.save()
+            # new_entry = form.save(commit=False)
+            # new_entry.topic = topic
+            # new_entry.save()
+            new_topic = form.save(commit=False)
+            new_topic.owner = request.user
+            new_topic.save()
             return redirect('learning_logs:topic', topic_id=topic_id)
 
     # Вывести пустую или недействительную форму.
@@ -70,6 +83,10 @@ def edit_entry(request, entry_id):
     """Редактирует существующую запись."""
     entry = Entry.objects.get(id=entry_id)
     topic = entry.topic
+    topic_1 = topic.owner
+    # if topic.owner != request.user:
+    #     raise Http404
+    check_topic_owner(topic_1, request)
     if request.method != 'POST':
         # Исходный запрос; форма заполняется данными текущей записи.
         form = EntryForm(instance=entry)
@@ -82,6 +99,13 @@ def edit_entry(request, entry_id):
 
     context = {'entry': entry, 'topic': topic, 'form': form}
     return render(request, 'learning_logs/edit_entry.html', context)
+
+
+
+
+def check_topic_owner(entry, request_1):
+    if entry != request_1.user:
+        raise Http404
 
 
 
