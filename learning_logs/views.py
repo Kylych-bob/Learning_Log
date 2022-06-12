@@ -101,8 +101,6 @@ def edit_entry(request, entry_id):
     return render(request, 'learning_logs/edit_entry.html', context)
 
 
-
-
 def check_topic_owner(entry, request_1):
     if entry != request_1.user:
         raise Http404
