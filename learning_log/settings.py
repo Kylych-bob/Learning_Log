@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ae^#1wn3n1h1xltnp32r7v_gbq#v(*h3+14a^r*g)m(k#d0+fz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['learning_log.herokuapp.com']
 
 
 # Application definition
@@ -80,12 +80,25 @@ WSGI_APPLICATION = 'learning_log.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd34rs3b2560fch',
+        'USER': 'ntkttxynexuceq',
+        'PASSWORD': '02b1bd53a0da4bc055b9a2eaa19c58923d1e693dcddfd0daf88c099e0a236a29',
+        'HOST': 'ec2-54-76-43-89.eu-west-1.compute.amazonaws.com',
+        'PORT': '5432'
     }
 }
+
 
 
 # Password validation
@@ -131,6 +144,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'users:login'
 
 # settings Heroku
+import django_heroku
 
+django_heroku.settings(locals())
 
 
