@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import django_heroku
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -87,14 +89,13 @@ WSGI_APPLICATION = 'learning_log.wsgi.application'
 #     }
 # }
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd34rs3b2560fch',
-        'USER': 'ntkttxynexuceq',
-        'PASSWORD': '02b1bd53a0da4bc055b9a2eaa19c58923d1e693dcddfd0daf88c099e0a236a29',
-        'HOST': 'ec2-54-76-43-89.eu-west-1.compute.amazonaws.com',
+        'NAME': 'd4ebb73322upip',
+        'USER': 'rgwrirxwjziwir',
+        'PASSWORD': '65da4e11e352d335b7a58f6080b3a5bb6e56c50ae2dbd76184d5e84780981239',
+        'HOST': 'ec2-34-225-159-178.compute-1.amazonaws.com',
         'PORT': '5432'
     }
 }
@@ -144,7 +145,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'users:login'
 
 # settings Heroku
-import django_heroku
+
 
 django_heroku.settings(locals())
 
